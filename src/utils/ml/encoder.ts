@@ -10,30 +10,25 @@ export async function loadModel() {
   return model;
 }
 
-export async function embedText(text: string): Promise<tf.Tensor> {
+export async function embedText(text: string): Promise<tf.Tensor2D> {
   const model = await loadModel();
-  const embedding = await model.embed([text]);
-  return tf.tidy(() => embedding.clone());
+  const embeddings = await model.embed([text]);
+  return embeddings as tf.Tensor2D;
 }
 
 export async function getSimilarity(text1: string, text2: string): Promise<number> {
-  const embeddings = await Promise.all([
+  const [embedding1, embedding2] = await Promise.all([
     embedText(text1),
     embedText(text2)
   ]);
   
   const similarity = tf.tidy(() => {
-    return tf.losses.cosineDistance(
-      embeddings[0], 
-      embeddings[1],
-      0
-    );
+    const distance = tf.losses.cosineDistance(embedding1, embedding2, 0);
+    return distance.dataSync()[0];
   });
   
-  const score = await similarity.data();
+  // Clean up tensors
+  tf.dispose([embedding1, embedding2]);
   
-  embeddings.forEach(e => e.dispose());
-  similarity.dispose();
-  
-  return 1 - score[0];
+  return 1 - similarity;
 }
