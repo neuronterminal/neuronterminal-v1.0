@@ -10,9 +10,10 @@ export async function loadModel() {
   return model;
 }
 
-export async function embedText(text: string): Promise<tf.Tensor2D> {
+export async function embedText(text: string): Promise<tf.Tensor> {
   const model = await loadModel();
-  return model.embed(text) as Promise<tf.Tensor2D>;
+  const embedding = await model.embed(text);
+  return embedding;
 }
 
 export async function getSimilarity(text1: string, text2: string): Promise<number> {
@@ -24,9 +25,7 @@ export async function getSimilarity(text1: string, text2: string): Promise<numbe
   const similarity = tf.losses.cosineDistance(
     embeddings[0], 
     embeddings[1],
-    0,
-    undefined,
-    'euclidean'
+    0
   );
   
   const score = await similarity.data();
