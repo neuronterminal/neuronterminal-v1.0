@@ -12,8 +12,8 @@ export async function loadModel() {
 
 export async function embedText(text: string): Promise<tf.Tensor> {
   const model = await loadModel();
-  const embedding = await model.embed(text);
-  return embedding;
+  const embedding = await model.embed([text]);
+  return embedding.asType('float32');
 }
 
 export async function getSimilarity(text1: string, text2: string): Promise<number> {
@@ -22,11 +22,13 @@ export async function getSimilarity(text1: string, text2: string): Promise<numbe
     embedText(text2)
   ]);
   
-  const similarity = tf.losses.cosineDistance(
-    embeddings[0], 
-    embeddings[1],
-    0
-  );
+  const similarity = tf.tidy(() => {
+    return tf.losses.cosineDistance(
+      embeddings[0], 
+      embeddings[1],
+      0
+    );
+  });
   
   const score = await similarity.data();
   
