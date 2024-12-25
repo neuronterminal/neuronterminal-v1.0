@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Neural network nodes -->
+  <circle cx="100" cy="50" r="10" fill="#00ff41" filter="url(#glow)"/>
+  <circle cx="60" cy="100" r="10" fill="#00ff41" filter="url(#glow)"/>
+  <circle cx="140" cy="100" r="10" fill="#00ff41" filter="url(#glow)"/>
+  <circle cx="100" cy="150" r="10" fill="#00ff41" filter="url(#glow)"/>
+  
+  <!-- Neural connections -->
+  <line x1="100" y1="50" x2="60" y2="100" stroke="#00ff41" stroke-width="2" opacity="0.6">
+    <animate attributeName="opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite"/>
+  </line>
+  <line x1="100" y1="50" x2="140" y2="100" stroke="#00ff41" stroke-width="2" opacity="0.6">
+    <animate attributeName="opacity" values="0.6;1;0.6" dur="1.5s" repeatCount="indefinite"/>
+  </line>
+  <line x1="60" y1="100" x2="100" y2="150" stroke="#00ff41" stroke-width="2" opacity="0.6">
+    <animate attributeName="opacity" values="0.6;1;0.6" dur="2.5s" repeatCount="indefinite"/>
+  </line>
+  <line x1="140" y1="100" x2="100" y2="150" stroke="#00ff41" stroke-width="2" opacity="0.6">
+    <animate attributeName="opacity" values="0.6;1;0.6" dur="1.8s" repeatCount="indefinite"/>
+  </line>
+  
+  <!-- Glow effect -->
+  <defs>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+</svg>

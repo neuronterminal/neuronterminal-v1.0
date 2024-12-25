@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --matrix-green: #00ff41;
+  --matrix-dark: #0d0208;
+}
+
+body {
+  background-color: var(--matrix-dark);
+  color: var(--matrix-green);
+  font-family: 'Courier New', monospace;
+}
+
+.matrix-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.chat-container {
+  background: rgba(13, 2, 8, 0.9);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--matrix-green);
+  box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+}
+
+.message-bubble {
+  border: 1px solid var(--matrix-green);
+  background: rgba(0, 255, 65, 0.05);
+  animation: glow 1.5s ease-in-out infinite alternate;
+}
+
+.message-bubble.user {
+  border-color: #4CAF50;
+  background: rgba(76, 175, 80, 0.05);
+}
+
+/* Custom Scrollbar Styles */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(13, 2, 8, 0.9);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--matrix-green);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 255, 65, 0.8);
+}
+
+/* Hide scrollbar for Firefox */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--matrix-green) rgba(13, 2, 8, 0.9);
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 5px rgba(0, 255, 65, 0.2);
+  }
+  to {
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.4);
+  }
+}
+
+.typing-indicator::after {
+  content: '▋';
+  animation: blink 1s step-start infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+.matrix-button {
+  background: transparent;
+  border: 1px solid var(--matrix-green);
+  color: var(--matrix-green);
+  transition: all 0.3s ease;
+}
+
+.matrix-button:hover {
+  background: rgba(0, 255, 65, 0.1);
+  box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+}
