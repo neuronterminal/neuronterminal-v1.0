@@ -10,6 +10,9 @@ export const patterns: Pattern[] = [
     ],
     priority: 1,
     followUp: false
-  },
+  }
   // ... rest of patterns remain the same
 ];
+
+// Export the Pattern type
+export type { Pattern } from './types';
