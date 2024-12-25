@@ -1,6 +1,11 @@
 import { KnowledgeGraph } from './knowledgeGraph';
 import { Intent } from './types';
 
+interface Concept {
+  concept: string;
+  relevance: number;
+}
+
 export class ReasoningEngine {
   private knowledgeGraph: KnowledgeGraph;
 
@@ -23,9 +28,9 @@ export class ReasoningEngine {
     }
   }
 
-  private generateInformativeResponse(context: string, concepts: any[]): string {
+  private generateInformativeResponse(context: string, concepts: Concept[]): string {
     if (concepts.length === 0) {
-      return "I understand you're asking about " + context + ". Could you provide more context or specify what aspect you'd like to know about?";
+      return `I understand you're asking about ${context}. Could you provide more context or specify what aspect you'd like to know about?`;
     }
 
     const mostRelevant = concepts[0];
@@ -41,7 +46,7 @@ export class ReasoningEngine {
     return `I notice you have complex feelings about ${context}. Could you tell me more about your perspective?`;
   }
 
-  private generateClarification(context: string, concepts: any[]): string {
+  private generateClarification(context: string, concepts: Concept[]): string {
     const conceptList = concepts.slice(0, 2).map(c => c.concept).join(' and ');
     return `Let me clarify: ${context} is related to ${conceptList}. Which aspect would you like me to explain further?`;
   }
