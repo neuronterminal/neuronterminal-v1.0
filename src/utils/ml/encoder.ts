@@ -13,7 +13,7 @@ export async function loadModel() {
 export async function embedText(text: string): Promise<tf.Tensor> {
   const model = await loadModel();
   const embedding = await model.embed([text]);
-  return embedding.asType('float32');
+  return tf.tidy(() => embedding.clone());
 }
 
 export async function getSimilarity(text1: string, text2: string): Promise<number> {
