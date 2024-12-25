@@ -3,17 +3,17 @@ import * as use from '@tensorflow-models/universal-sentence-encoder';
 
 let model: use.UniversalSentenceEncoder | null = null;
 
-export async function loadModel() {
+export async function loadModel(): Promise<use.UniversalSentenceEncoder> {
   if (!model) {
     model = await use.load();
   }
   return model;
 }
 
-export async function embedText(text: string): Promise<tf.Tensor2D> {
+export async function embedText(text: string): Promise<tf.Tensor> {
   const model = await loadModel();
   const embeddings = await model.embed([text]);
-  return embeddings as tf.Tensor2D;
+  return tf.tensor(await embeddings.array());
 }
 
 export async function getSimilarity(text1: string, text2: string): Promise<number> {
@@ -28,7 +28,8 @@ export async function getSimilarity(text1: string, text2: string): Promise<numbe
   });
   
   // Clean up tensors
-  tf.dispose([embedding1, embedding2]);
+  embedding1.dispose();
+  embedding2.dispose();
   
   return 1 - similarity;
 }
