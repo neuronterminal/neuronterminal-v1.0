@@ -3,7 +3,7 @@ import React from 'react';
 export function GitHubButton() {
   return (
     <a
-      href="https://github.com/yourusername/your-repo"
+      href="https://github.com/neuronterminal/neuronterminal-v1.0/"
       target="_blank"
       rel="noopener noreferrer"
       className="matrix-button px-4 py-2 rounded hover:bg-[#00ff41]/10"
