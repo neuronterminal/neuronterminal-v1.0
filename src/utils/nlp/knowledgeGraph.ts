@@ -1,19 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
-
-interface KnowledgeNode {
-  id: string;
-  concept: string;
-  type: 'entity' | 'concept' | 'fact' | 'relation';
-  properties: Record<string, any>;
-  connections: Set<string>;
-  confidence: number;
-}
+import { KnowledgeNode } from './types';
 
 export class KnowledgeGraph {
   private nodes: Map<string, KnowledgeNode> = new Map();
   private relationships: Map<string, Set<string>> = new Map();
 
-  addNode(concept: string, type: KnowledgeNode['type'], properties: Record<string, any> = {}) {
+  addNode(concept: string, type: KnowledgeNode['type'], properties: Record<string, any> = {}): string {
     const id = uuidv4();
     const node: KnowledgeNode = {
       id,
@@ -21,13 +13,14 @@ export class KnowledgeGraph {
       type,
       properties,
       connections: new Set(),
-      confidence: 0.5
+      confidence: 0.5,
+      relevance: 1.0
     };
     this.nodes.set(id, node);
     return id;
   }
 
-  addRelationship(sourceId: string, targetId: string, type: string) {
+  addRelationship(sourceId: string, targetId: string, type: string): void {
     const source = this.nodes.get(sourceId);
     const target = this.nodes.get(targetId);
     
@@ -58,6 +51,7 @@ export class KnowledgeGraph {
       if (currentDepth > depth) continue;
       
       visited.add(node.id);
+      node.relevance = 1 - (currentDepth / depth);
       related.add(node);
 
       for (const connectionId of node.connections) {
@@ -68,23 +62,23 @@ export class KnowledgeGraph {
       }
     }
 
-    return Array.from(related);
+    return Array.from(related)
+      .sort((a, b) => b.relevance - a.relevance);
   }
 
-  inferNewKnowledge(): void {
-    // Transitive inference
-    this.nodes.forEach(node => {
-      node.connections.forEach(connId1 => {
-        const conn1 = this.nodes.get(connId1);
-        if (conn1) {
-          conn1.connections.forEach(connId2 => {
-            if (!node.connections.has(connId2) && connId2 !== node.id) {
-              this.addRelationship(node.id, connId2, 'inferred');
-              node.confidence *= 0.8; // Reduce confidence for inferred relationships
-            }
-          });
-        }
-      });
-    });
+  getNode(id: string): KnowledgeNode | undefined {
+    return this.nodes.get(id);
+  }
+
+  getAllNodes(): KnowledgeNode[] {
+    return Array.from(this.nodes.values());
+  }
+
+  getRelationships(type?: string): string[] {
+    if (type) {
+      return Array.from(this.relationships.get(type) || []);
+    }
+    return Array.from(this.relationships.values())
+      .flatMap(set => Array.from(set));
   }
 }
